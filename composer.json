@@ -1,0 +1,14 @@
+{
+    "name": "zbrachmanis/salesforce-integration",
+    "authors": [
+        {
+            "name": "Zac Brachmanis",
+            "email": "zbrachmanis@miva.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+    	"developerforce/force.com-toolkit-for-php": "1.0.*@dev",
+	    "phpforce/soap-client": "dev-master"
+    }
+}

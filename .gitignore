@@ -1,0 +1,6 @@
+vendor/
+log.txt
+plan.txt
+composer.lock
+file.wsdl
+bootstrap.php
