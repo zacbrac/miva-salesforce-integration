@@ -24,7 +24,7 @@ if (isset($_POST['settings:order:ship_city']) && $_POST['settings:order:ship_cit
 if (isset($_POST['settings:order:ship_state']) && $_POST['settings:order:ship_state'] !== '') {$Shipping_Obj['State'] = $_POST['settings:order:ship_state'];}
 if (isset($_POST['settings:order:ship_zip']) && $_POST['settings:order:ship_zip'] !== '') {$Shipping_Obj['PostalCode'] = $_POST['settings:order:ship_zip'];}
 if (isset($_POST['settings:order:ship_cntry']) && $_POST['settings:order:ship_cntry'] !== '') {$Shipping_Obj['Country'] = $_POST['settings:order:ship_cntry'];}
-
+$Billing_Obj['LeadSource'] = "Miva";
 if ($Billing_Obj['FirstName'] != $Shipping_Obj['FirstName'] || $Billing_Obj['LastName'] != $Shipping_Obj['LastName'] || $Billing_Obj['Email'] != $Shipping_Obj['Email'] || $Billing_Obj['Phone'] != $Shipping_Obj['Phone'] || $Billing_Obj['Company'] != $Shipping_Obj['Company'] || $Billing_Obj['Street'] != $Shipping_Obj['Street'] || $Billing_Obj['City'] != $Shipping_Obj['City'] || $Billing_Obj['State'] != $Shipping_Obj['State'] || $Billing_Obj['PostalCode'] != $Shipping_Obj['PostalCode'] || $Billing_Obj['Country'] != $Shipping_Obj['Country']) {
 	$different_info = true;
 }
