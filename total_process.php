@@ -42,7 +42,7 @@ if (isset($Lead_Id)) {
 
 $leadConvertArray = array($leadConvert);
 $leadConvertResponse = $client->convertLead($leadConvertArray);
-// var_dump($leadConvertResponse);
+var_dump($leadConvertResponse);
 
 include 'objects/ProductObjectCreation.php';
 
@@ -55,4 +55,5 @@ foreach ($leadConvertResponse as $key => $convertedLead) {
 $OpportunityUpdateObj->Id = $opportunityId;
 $OpportunityUpdateObj->API_Generated__c = true;
 $OpportunityUpdateResponse = $client->update(array($OpportunityUpdateObj), 'Opportunity');
+
 // var_dump($OpportunityUpdateResponse);
