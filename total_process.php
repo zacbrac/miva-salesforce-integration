@@ -6,8 +6,8 @@ $builder = new ClientBuilder(SF_WSDL, SF_USERNAME, SF_PASSWORD, SF_SECURITY_TOKE
 
 $client = $builder->build();
 
-$Billing_Obj = array();
-$Shipping_Obj = array();
+$Billing_Obj    = array();
+$Shipping_Obj   = array();
 $different_info = false;
 // TESTING
 include 'post_vars.php';
@@ -21,26 +21,26 @@ include 'objects/LeadObjectCreation.php';
 $CloseDate = new DateTime('America/New_York');
 
 if (isset($Lead_Id)) {
-	$leadConvert = new stdClass;
-	$leadConvert->convertedStatus = 'Converted';
-	$leadConvert->doNotCreateOpportunity = false;
-	$leadConvert->leadId = $Lead_Id;
-	$leadConvert->CloseDate = $CloseDate->format('m/d/Y H:i:s');
-	$leadConvert->overwriteLeadSource = false;
-	$leadConvert->sendNotificationEmail = true;
+    $leadConvert                         = new stdClass;
+    $leadConvert->convertedStatus        = 'Converted';
+    $leadConvert->doNotCreateOpportunity = false;
+    $leadConvert->leadId                 = $Lead_Id;
+    $leadConvert->CloseDate              = $CloseDate->format('m/d/Y H:i:s');
+    $leadConvert->overwriteLeadSource    = false;
+    $leadConvert->sendNotificationEmail  = true;
 
-	if ($different_info === true) {
-		//CREATE AN ACCOUNT AND A CONTACT, THEN CONVERT THE LEAD THAT WAS CREATED WHILE REFERENCING THE CREATED ACCOUNT AND CONTACT
-		include 'objects/AccountObjectCreation.php';
-		include 'objects/ContactObjectCreation.php';
+    if ($different_info === true) {
+        //CREATE AN ACCOUNT AND A CONTACT, THEN CONVERT THE LEAD THAT WAS CREATED WHILE REFERENCING THE CREATED ACCOUNT AND CONTACT
+        include 'objects/AccountObjectCreation.php';
+        include 'objects/ContactObjectCreation.php';
 
-		if (isset($Account_Id)) {$leadConvert->accountId = $Account_Id;}
-		if (isset($Contact_Id)) {$leadConvert->contactId = $Contact_Id;}
-	}
+        if (isset($Account_Id)) {$leadConvert->accountId = $Account_Id;}
+        if (isset($Contact_Id)) {$leadConvert->contactId = $Contact_Id;}
+    }
 
 }
 
-$leadConvertArray = array($leadConvert);
+$leadConvertArray    = array($leadConvert);
 $leadConvertResponse = $client->convertLead($leadConvertArray);
 var_dump($leadConvertResponse);
 
@@ -49,11 +49,11 @@ include 'objects/ProductObjectCreation.php';
 //GET Opportunity id from lead convert
 $OpportunityUpdateObj = new stdClass();
 foreach ($leadConvertResponse as $key => $convertedLead) {
-	$opportunityId = $convertedLead->opportunityId;
+    $opportunityId = $convertedLead->opportunityId;
 }
 
-$OpportunityUpdateObj->Id = $opportunityId;
+$OpportunityUpdateObj->Id               = $opportunityId;
 $OpportunityUpdateObj->API_Generated__c = true;
-$OpportunityUpdateResponse = $client->update(array($OpportunityUpdateObj), 'Opportunity');
+$OpportunityUpdateResponse              = $client->update(array($OpportunityUpdateObj), 'Opportunity');
 
-// var_dump($OpportunityUpdateResponse);
+var_dump($OpportunityUpdateResponse);
