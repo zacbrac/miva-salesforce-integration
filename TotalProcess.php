@@ -1,66 +1,61 @@
 <?php
-use Phpforce\SoapClient\ClientBuilder as ClientBuilder;
-
 /**
-* TotalProcess
-*/
-class TotalProcess
-{
-    
-    function __construct(ClientBuilder $builder)
-    {
-        $client = $builder->build();
+ * TotalProcess
+ */
+class TotalProcess {
 
-        $Billing_Obj    = array();
-        $Shipping_Obj   = array();
-        $different_info = false;
-        // TESTING
-        include 'post_vars.php';
+	function __construct($client) {
+		$Billing_Obj = array();
+		$Shipping_Obj = array();
+		$different_info = false;
+		//TESTING
+		include 'post_vars.php';
 
-        // CREATE LEAD
-        include 'objects/LeadObjectCreation.php';
+		//CREATE LEAD
+		include 'objects/LeadObjectCreation.php';
 
-        // IF BILL TO INFO AND SHIP TO INFO ARE ALL THE SAME
-        // THEN CONVERT THE LEAD USING THE BILL TO INFO
+		//IF BILL TO INFO AND SHIP TO INFO ARE ALL THE SAME
+		//THEN CONVERT THE LEAD USING THE BILL TO INFO
 
-        $CloseDate = new DateTime('America/New_York');
+		$CloseDate = new DateTime('America/New_York');
 
-        if (isset($Lead_Id)) {
-            $leadConvert                         = new stdClass;
-            $leadConvert->convertedStatus        = 'Converted';
-            $leadConvert->doNotCreateOpportunity = false;
-            $leadConvert->leadId                 = $Lead_Id;
-            $leadConvert->CloseDate              = $CloseDate->format('m/d/Y H:i:s');
-            $leadConvert->overwriteLeadSource    = false;
-            $leadConvert->sendNotificationEmail  = true;
+		if (isset($Lead_Id)) {
+			$leadConvert = new stdClass;
+			$leadConvert->convertedStatus = 'Converted';
+			$leadConvert->doNotCreateOpportunity = false;
+			$leadConvert->leadId = $Lead_Id;
+			$leadConvert->CloseDate = $CloseDate->format('m/d/Y H:i:s');
+			$leadConvert->overwriteLeadSource = false;
+			$leadConvert->sendNotificationEmail = true;
 
-            if ($different_info === true) {
-                //CREATE AN ACCOUNT AND A CONTACT, THEN CONVERT THE LEAD THAT WAS CREATED WHILE REFERENCING THE CREATED ACCOUNT AND CONTACT
-                include 'objects/AccountObjectCreation.php';
-                include 'objects/ContactObjectCreation.php';
+			if ($different_info === true) {
+				//CREATE AN ACCOUNT AND A CONTACT
+				include 'objects/AccountObjectCreation.php';
+				include 'objects/ContactObjectCreation.php';
 
-                if (isset($Account_Id)) {$leadConvert->accountId = $Account_Id;}
-                if (isset($Contact_Id)) {$leadConvert->contactId = $Contact_Id;}
-            }
+				if (isset($Account_Id)) {$leadConvert->accountId = $Account_Id;}
+				if (isset($Contact_Id)) {$leadConvert->contactId = $Contact_Id;}
+			}
 
-        }
+		}
+		//THEN CONVERT THE LEAD THAT WAS CREATED WHILE REFERENCING THE CREATED ACCOUNT AND CONTACT
+		$leadConvertArray = array($leadConvert);
+		$leadConvertResponse = $client->convertLead($leadConvertArray);
+		var_dump($leadConvertResponse);
 
-        $leadConvertArray    = array($leadConvert);
-        $leadConvertResponse = $client->convertLead($leadConvertArray);
-        var_dump($leadConvertResponse);
+		//CREATE PRODUCTS
+		include 'objects/ProductObjectCreation.php';
 
-        include 'objects/ProductObjectCreation.php';
+		//GET OPPORTUNITY ID FROM LEAD CONVERT
+		$OpportunityUpdateObj = new stdClass();
+		foreach ($leadConvertResponse as $key => $convertedLead) {
+			$opportunityId = $convertedLead->opportunityId;
+		}
 
-        //GET Opportunity id from lead convert
-        $OpportunityUpdateObj = new stdClass();
-        foreach ($leadConvertResponse as $key => $convertedLead) {
-            $opportunityId = $convertedLead->opportunityId;
-        }
+		$OpportunityUpdateObj->Id = $opportunityId;
+		$OpportunityUpdateObj->API_Generated__c = true;
+		$OpportunityUpdateResponse = $client->update(array($OpportunityUpdateObj), 'Opportunity');
 
-        $OpportunityUpdateObj->Id               = $opportunityId;
-        $OpportunityUpdateObj->API_Generated__c = true;
-        $OpportunityUpdateResponse              = $client->update(array($OpportunityUpdateObj), 'Opportunity');
-
-        var_dump($OpportunityUpdateResponse);
-    }
+		var_dump($OpportunityUpdateResponse);
+	}
 }

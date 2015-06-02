@@ -25,15 +25,10 @@ $_POST['settings:order:bill_lname'] = 'Brachmanis';
 $_POST['settings:order:bill_phone'] = '8587314119';
 $_POST['settings:order:bill_state'] = 'CA';
 $_POST['settings:order:bill_zip'] = '92127';
+$_POST['settings:products_names'] = 'MTEST,PMI,ikb,20607,ikb';
 $_POST['settings:products_codes'] = 'MTEST,PMI,ikb,20607,ikb';
-$_POST['settings:products_descriptions'] = 'NULL,NULL,NULL,NULL,NULL';
-$_POST['settings:products_inv_available'] = 'NULL,NULL,-4,-2,-2';
-$_POST['settings:products_inv_instock'] = 'NULL,NULL,-4,-2,-2';
-$_POST['settings:product_inv_available'] = 'NULL,NULL,-4,-2,-2';
-$_POST['settings:products_cost'] = 'NULL,NULL,NULL,34.5,NULL';
-
-$products = explode(',', $_POST['settings:products_codes']);
-
-for ($i=0; $i < count($products); $i++) { 
-	echo $i;
-}
+$_POST['settings:products_descriptions'] = 'HELLO,THERE,PERSON,WHAT,SOME';
+$_POST['settings:products_inv_available'] = '0,0,-4,-2,-2';
+$_POST['settings:products_inv_instock'] = '0,0,-4,-2,-2';
+$_POST['settings:product_inv_available'] = '1,1,-4,-2,-2';
+$_POST['settings:products_cost'] = '0.0,0.0,0.0,34.5,0.0';
