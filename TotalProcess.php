@@ -5,6 +5,11 @@
 class TotalProcess {
 
 	function __construct($client) {
+		
+		if ( isset($_POST['settings:logged_in']) && $_POST['settings:logged_in'] === 'true' ) {
+			$logged_in = true;
+		}
+
 		$Billing_Obj = array();
 		$Shipping_Obj = array();
 		$different_info = false;
@@ -41,21 +46,26 @@ class TotalProcess {
 		//THEN CONVERT THE LEAD THAT WAS CREATED WHILE REFERENCING THE CREATED ACCOUNT AND CONTACT
 		$leadConvertArray = array($leadConvert);
 		$leadConvertResponse = $client->convertLead($leadConvertArray);
-		var_dump($leadConvertResponse);
-
-		//CREATE PRODUCTS
-		include 'objects/ProductObjectCreation.php';
 
 		//GET OPPORTUNITY ID FROM LEAD CONVERT
-		$OpportunityUpdateObj = new stdClass();
+		$OpportunityUpdate_Obj = new stdClass();
+		
 		foreach ($leadConvertResponse as $key => $convertedLead) {
-			$opportunityId = $convertedLead->opportunityId;
+			$Opportunity_Id = $convertedLead->opportunityId;
 		}
 
-		$OpportunityUpdateObj->Id = $opportunityId;
-		$OpportunityUpdateObj->API_Generated__c = true;
-		$OpportunityUpdateResponse = $client->update(array($OpportunityUpdateObj), 'Opportunity');
+		$OpportunityUpdate_Obj->Id = $Opportunity_Id;
+		$OpportunityUpdate_Obj->API_Generated__c = true;
+		
 
+		//CREATE/UPDATE PRODUCTS AND REFERENCE THEM TO CREATED OPPORTUNITY
+		include 'objects/ProductObjectCreation.php';
+
+		//CREATE/UPDATE Shipping Carrier and Payment Terms AND REFERENCE THEM TO CREATED OPPORTUNITY
+		include 'objects/TermObjectCreation.php';
+
+		$OpportunityUpdateResponse = $client->update(array($OpportunityUpdate_Obj), 'Opportunity');
+		
 		var_dump($OpportunityUpdateResponse);
 	}
 }

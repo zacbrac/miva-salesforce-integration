@@ -14,9 +14,16 @@ if (isset($_POST['settings:order:bill_city']) && $_POST['settings:order:bill_cit
 if (isset($_POST['settings:order:bill_state']) && $_POST['settings:order:bill_state'] !== '') {$Billing_Obj['BillingState'] = $_POST['settings:order:bill_state'];}
 if (isset($_POST['settings:order:bill_zip']) && $_POST['settings:order:bill_zip'] !== '') {$Billing_Obj['BillingPostalCode'] = $_POST['settings:order:bill_zip'];}
 if (isset($_POST['settings:order:bill_cntry']) && $_POST['settings:order:bill_cntry'] !== '') {$Billing_Obj['BillingCountry'] = $_POST['settings:order:bill_cntry'];}
+
+if (isset($_POST['settings:order:bill_comp']) && $_POST['settings:order:bill_comp'] !== '') {$Billing_Obj['Company_Id__c'] = $_POST['settings:order:bill_comp'];}
 $Billing_Obj['API_Generated__c'] = true;
 
-$createResponse = $client->create(array((object) $Billing_Obj), 'Account');
+
+if ( isset($logged_in) && $logged_in === true ) {
+	$createResponse = $client->upsert( 'Company_Id__c', array((object) $Billing_Obj), 'Account');
+} else {
+	$createResponse = $client->create(array((object) $Billing_Obj), 'Account');
+}
 
 foreach ($createResponse as $account) {
 	$Account_Id = $account->getId();
