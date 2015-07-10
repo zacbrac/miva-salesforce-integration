@@ -1,6 +1,6 @@
 vendor/
 log.txt
-plan.txt
+plan.md
 composer.lock
 file.wsdl
 bootstrap.php

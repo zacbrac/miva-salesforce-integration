@@ -1,4 +1,5 @@
 <?php
+
 $product_names = explode(',', $_POST['settings:products_names']);
 $product_codes = explode(',', $_POST['settings:products_codes']);
 $product_ids = explode(',', $_POST['settings:products_ids']);
@@ -13,6 +14,7 @@ $product_price = explode(',', $_POST['settings:products_unit_prices']);
 //Product Construct
 $products = array();
 for ($i = 0; $i < count($product_codes); $i++) {
+	
 	$product = array();
 
 	$product['Name'] = $product_names[$i];
@@ -29,11 +31,15 @@ for ($i = 0; $i < count($product_codes); $i++) {
 	$product['IsActive'] = true;
 	$product['OpportunityId'] = $Opportunity_Id;
 	$products[] = (object) $product;
+
 }
 
 $createResponse = $client->upsert( 'Product_Code__c' , $products, 'Product2');
 
 foreach ($createResponse as $product) {
+	
 	$product_id = $product->getId();
+	var_dump($product_id);
+
 }
 

@@ -5,15 +5,18 @@ use Phpforce\SoapClient\ClientBuilder;
 $builder = new ClientBuilder(SF_WSDL, SF_USERNAME, SF_PASSWORD, SF_SECURITY_TOKEN);
 $client = $builder->build();
 
+//TESTING
+include 'post_vars.php';
+
 if (isset($_POST['settings:logged_in']) && $_POST['settings:logged_in'] === 'true') {
+    
     $logged_in = true;
+
 }
 
 $Billing_Obj = array();
 $Shipping_Obj = array();
 $different_info = false;
-//TESTING
-include 'post_vars.php';
 
 //CREATE LEAD
 include 'objects/LeadObjectCreation.php';
@@ -33,26 +36,31 @@ if (isset($Lead_Id)) {
     $leadConvert->sendNotificationEmail = true;
 
     if ($different_info === true) {
+        
         //CREATE AN ACCOUNT AND A CONTACT
         include 'objects/AccountObjectCreation.php';
         include 'objects/ContactObjectCreation.php';
 
         if (isset($Account_Id)) {$leadConvert->accountId = $Account_Id;}
         if (isset($Contact_Id)) {$leadConvert->contactId = $Contact_Id;}
+
     }
 
 }
+
 //THEN CONVERT THE LEAD THAT WAS CREATED WHILE REFERENCING THE CREATED ACCOUNT AND CONTACT
 $leadConvertArray = array($leadConvert);
 $leadConvertResponse = $client->convertLead($leadConvertArray);
 
 //GET OPPORTUNITY ID FROM LEAD CONVERT
-$OpportunityUpdate_Obj = new stdClass();
 
 foreach ($leadConvertResponse as $key => $convertedLead) {
+
     $Opportunity_Id = $convertedLead->opportunityId;
+    
 }
 
+$OpportunityUpdate_Obj = new stdClass();
 $OpportunityUpdate_Obj->Id = $Opportunity_Id;
 $OpportunityUpdate_Obj->API_Generated__c = true;
 
@@ -64,4 +72,4 @@ include 'objects/TermObjectCreation.php';
 
 $OpportunityUpdateResponse = $client->update(array($OpportunityUpdate_Obj), 'Opportunity');
 
-var_dump($OpportunityUpdateResponse);
+// var_dump($OpportunityUpdateResponse);
