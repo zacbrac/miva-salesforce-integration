@@ -37,9 +37,9 @@ $_POST['settings:products_descriptions'] = 'HELLO,THERE,PERSON,WHAT,SOME';
 $_POST['settings:products_inv_available'] = '0,0,-4,-2,-2';
 $_POST['settings:products_inv_instock'] = '0,0,-4,-2,-2';
 $_POST['settings:product_inv_available'] = '1,1,-4,-2,-2';
-$_POST['settings:products_cost'] = '0.0,0.0,0.0,34.5,0.0';
-$_POST['settings:products_line_prices'] = '0.0,0.0,0.0,34.5,0.0';
-$_POST['settings:products_unit_prices'] = '0.0,0.0,0.0,34.5,0.0';
+$_POST['settings:products_cost'] = '24.1,0.0,0.0,34.5,0.0';
+$_POST['settings:products_line_prices'] = '24.1,0.0,0.0,34.5,0.0';
+$_POST['settings:products_unit_prices'] = '24.1,0.0,0.0,34.5,0.0';
 
 //Pay/Ship method info
 $_POST['settings:order:payment_type'] = 'MasterCard';

@@ -16,29 +16,30 @@ $products = array();
 $product_codes_count = count($product_codes);
 
 for ($i = 0; $i < $product_codes_count; $i++) {
-	
-	$product = array();
+    
+    $product = array();
 
-	$product['Name'] = $product_names[$i];
-	$product['ProductCode'] = $product_codes[$i];
-	$product['Product2Id'] = $product_ids[$i];
-	$product['Product_Code__c'] = $product_codes[$i];
-	$product['fishbookspro__Last_Cost__c'] = $product_cost[$i];
-	$product['TotalPrice'] = $product_line_price[$i];
-	$product['UnitPrice'] = $product_price[$i];
-	$product['Description'] = $product_descriptions[$i];
-	$product['Quantity'] = $product_quantities[$i];
-	$product['fishbookspro__TotalAvailableForSale__c'] = $product_inv_available[$i];
-	$product['fishbookspro__TotalInStock__c'] = $product_inv_instock[$i];
-	$product['IsActive'] = true;
-	$products[] = (object) $product;
+    $product['Description'] = $product_descriptions[$i];
+    $product['OpportunityId'] = $Opportunity_Id;
+    $product['UnitPrice'] = $product_price[$i];
+    $product['Description'] = $product_descriptions[$i];
+    $product['Quantity'] = $product_quantities[$i];
+
+    $query = "SELECT Id from PricebookEntry WHERE Product_Code_c__c = '$product_codes[$i]'";
+    $response = $client->query($query);
+    $response = $response->getQueryResult();
+    $response = $response->getRecord(0);
+    $product['PricebookEntryId'] = $response->Id;
+
+    $products[] = (object) $product;
 
 }
 
-$createResponse = $client->upsert( 'Product_Code__c' , $products, 'Product2');
+$createResponse = $client->create( $products, 'OpportunityLineItem');
 
 foreach ($createResponse as $product) {
-	
-	$product_id = $product->getId();
+    
+    $product_id = $product->getId();
+    var_dump($product_id);
 
 }

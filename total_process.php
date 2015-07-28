@@ -57,7 +57,7 @@ $leadConvertResponse = $client->convertLead($leadConvertArray);
 foreach ($leadConvertResponse as $key => $convertedLead) {
 
     $Opportunity_Id = $convertedLead->opportunityId;
-    
+
 }
 
 $OpportunityUpdate_Obj = new stdClass();
@@ -66,10 +66,14 @@ $OpportunityUpdate_Obj->API_Generated__c = true;
 
 //CREATE/UPDATE PRODUCTS AND REFERENCE THEM TO CREATED OPPORTUNITY
 include 'objects/ProductObjectCreation.php';
+include 'objects/PriceBookEntryObjectCreation.php';
+
+//CREATE OpportunityLineItem AND REFERENCE THEM TO CREATED OPPORTUNITY
+include 'objects/OpportunityLineItemObjectCreation.php';
 
 //CREATE/UPDATE Shipping Carrier and Payment Terms AND REFERENCE THEM TO CREATED OPPORTUNITY
 include 'objects/TermObjectCreation.php';
 
 $OpportunityUpdateResponse = $client->update(array($OpportunityUpdate_Obj), 'Opportunity');
 
-// var_dump($OpportunityUpdateResponse);
+var_dump($OpportunityUpdateResponse);
