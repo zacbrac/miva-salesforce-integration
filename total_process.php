@@ -5,9 +5,6 @@ use Phpforce\SoapClient\ClientBuilder;
 $builder = new ClientBuilder(SF_WSDL, SF_USERNAME, SF_PASSWORD, SF_SECURITY_TOKEN);
 $client = $builder->build();
 
-//TESTING
-include 'post_vars.php';
-
 if (isset($_POST['settings:logged_in']) && $_POST['settings:logged_in'] === 'true') {
     
     $logged_in = true;
@@ -27,6 +24,7 @@ include 'objects/LeadObjectCreation.php';
 $CloseDate = new DateTime('America/New_York');
 
 if (isset($Lead_Id)) {
+    
     $leadConvert = new stdClass;
     $leadConvert->convertedStatus = 'Converted';
     $leadConvert->doNotCreateOpportunity = false;
