@@ -1,18 +1,18 @@
 <?php
 require_once dirname(__FILE__) . '/bootstrap.php';
+include 'functions.php';
+
 use Phpforce\SoapClient\ClientBuilder;
 
 $builder = new ClientBuilder(SF_WSDL, SF_USERNAME, SF_PASSWORD, SF_SECURITY_TOKEN);
 $client = $builder->build();
 
-if (isset($_POST['settings:logged_in']) && $_POST['settings:logged_in'] === 'true') {
-    
-    $logged_in = true;
+$logged_in = (isset($_POST['settings:logged_in']) ? true : false );
 
-}
+$order_number = ( isset($_POST['settings:order:id']) ? $_POST['settings:order:id'] : false );
 
-$Billing_Obj = array();
-$Shipping_Obj = array();
+$Shipping_Obj = $Billing_Obj = array();
+
 $different_info = false;
 
 //CREATE LEAD
@@ -48,7 +48,16 @@ if (isset($Lead_Id)) {
 
 //THEN CONVERT THE LEAD THAT WAS CREATED WHILE REFERENCING THE CREATED ACCOUNT AND CONTACT
 $leadConvertArray = array($leadConvert);
-$leadConvertResponse = $client->convertLead($leadConvertArray);
+
+try {
+
+    $leadConvertResponse = $client->convertLead($leadConvertArray);
+
+} catch (Exception $e) {
+
+    reportError('Caught exception: total_process: $leadConvertResponse ' . $e->getMessage() . "\n information that was trying to submit: " . var_export($leadConvertResponse, true));
+
+}
 
 //GET OPPORTUNITY ID FROM LEAD CONVERT
 
@@ -62,6 +71,10 @@ $OpportunityUpdate_Obj = new stdClass();
 $OpportunityUpdate_Obj->Id = $Opportunity_Id;
 $OpportunityUpdate_Obj->API_Generated__c = true;
 
+if ($order_number != false) {
+    $OpportunityUpdate_Obj->fishbookspro__Customer_PO__c = $order_number;
+}
+
 //CREATE/UPDATE PRODUCTS AND REFERENCE THEM TO CREATED OPPORTUNITY
 include 'objects/ProductObjectCreation.php';
 include 'objects/PriceBookEntryObjectCreation.php';
@@ -73,5 +86,3 @@ include 'objects/OpportunityLineItemObjectCreation.php';
 include 'objects/TermObjectCreation.php';
 
 $OpportunityUpdateResponse = $client->update(array($OpportunityUpdate_Obj), 'Opportunity');
-
-var_dump($OpportunityUpdateResponse);

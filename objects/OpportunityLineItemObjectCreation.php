@@ -21,7 +21,7 @@ for ($i = 0; $i < $product_codes_count; $i++) {
 
     $product['Description'] = $product_descriptions[$i];
     $product['OpportunityId'] = $Opportunity_Id;
-    $product['TotalPrice'] = $product_line_price[$i];
+    $product['TotalPrice'] = ( $product_line_price[$i] != '' ? $product_line_price[$i] : 0.00);
     $product['Description'] = $product_descriptions[$i];
     $product['Quantity'] = $product_quantities[$i];
 
@@ -35,7 +35,15 @@ for ($i = 0; $i < $product_codes_count; $i++) {
 
 }
 
-$createResponse = $client->create( $products, 'OpportunityLineItem');
+try {
+
+    $createResponse = $client->create( $products, 'OpportunityLineItem');
+
+} catch (Exception $e) {
+
+    reportError('Caught exception: OpportunityLineItemObjectCreation: ' . $e->getMessage() . "\n information that was trying to submit: " . var_export($products, true));
+
+}
 
 foreach ($createResponse as $product) {
     

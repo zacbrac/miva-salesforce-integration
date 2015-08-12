@@ -1,0 +1,129 @@
+<mvt:assign name="g.quotation_mark" value="asciichar( 34 )" />
+<mvt:foreach iterator="group" array="order:groups">
+    <mvt:if expr="l.settings:group:id">
+        <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_ids, l.settings:group:id, -1 )" />
+    <mvt:else>
+        <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_ids, 'NULL', -1 )" />
+    </mvt:if>
+    <mvt:if expr="l.settings:group:quantity">
+        <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_quantities, l.settings:group:quantity, -1 )" />
+    <mvt:else>
+        <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_quantities, 'NULL', -1 )" />
+    </mvt:if>
+    <mvt:if expr="l.settings:group:price">
+        <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_unit_prices, l.settings:group:price, -1 )" />
+    <mvt:else>
+        <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_unit_prices, '0.00', -1 )" />
+    </mvt:if>
+    <mvt:assign name="l.settings:group:line_price" value="l.settings:group:price" />
+    <mvt:foreach iterator="option" array="group:options">
+        <mvt:assign name="l.settings:group:line_price" value="l.settings:group:line_price + l.settings:option:price" />
+    </mvt:foreach>
+    <mvt:if expr="l.settings:group:line_price">
+        <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_line_prices, l.settings:group:line_price, -1 )" />
+    <mvt:else>
+        <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_line_prices, '0.00', -1 )" />
+    </mvt:if>
+    <mvt:if expr="l.settings:group:name">
+        <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_names, g.quotation_mark $ l.settings:group:name $ g.quotation_mark, -1 )" />
+    <mvt:else>
+        <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_names, 'NULL', -1 )" />
+    </mvt:if>
+    <mvt:if expr="l.settings:group:code">
+        <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_codes, l.settings:group:code, -1 )" />
+    <mvt:else>
+        <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_codes, 'NULL', -1 )" />
+    </mvt:if>
+    <mvt:if expr="l.settings:group:descrip">
+        <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_descriptions, g.quotation_mark $ l.settings:group:descrip $ g.quotation_mark, -1 )" />
+    <mvt:else>
+        <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_descriptions, 'NULL', -1 )" />
+    </mvt:if>
+    <mvt:if expr="l.settings:group:parts">
+        <mvt:if expr="l.settings:group:parts[1]:inv_available">
+            <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_inv_available, l.settings:group:parts[1]:inv_available, -1 )" />
+        <mvt:else>
+            <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_inv_available, 'NULL', -1 )" />
+        </mvt:if>
+        <mvt:if expr="l.settings:group:parts[1]:inv_instock">
+            <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_inv_instock, l.settings:group:parts[1]:inv_instock, -1 )" />
+        <mvt:else>
+            <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_inv_instock, 'NULL', -1 )" />
+        </mvt:if>
+        <mvt:if expr="l.settings:group:parts[1]:inv_available">
+            <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:product_inv_available, l.settings:group:parts[1]:inv_available, -1 )" />
+        <mvt:else>
+            <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:product_inv_available, 'NULL', -1 )" />
+        </mvt:if>
+        <mvt:if expr="l.settings:group:parts[1]:cost">
+            <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_cost, l.settings:group:parts[1]:cost, -1 )" />
+        <mvt:else>
+            <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_cost, '0.00', -1 )" />
+        </mvt:if>
+    <mvt:else>
+        <mvt:if expr="l.settings:group:inv_available">
+            <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_inv_available, l.settings:group:inv_available, -1 )" />
+        <mvt:else>
+            <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_inv_available, 'NULL', -1 )" />
+        </mvt:if>
+        <mvt:if expr="l.settings:group:inv_instock">
+            <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_inv_instock, l.settings:group:inv_instock, -1 )" />
+        <mvt:else>
+            <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_inv_instock, 'NULL', -1 )" />
+        </mvt:if>
+        <mvt:if expr="l.settings:group:inv_available">
+            <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:product_inv_available, l.settings:group:inv_available, -1 )" />
+        <mvt:else>
+            <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:product_inv_available, 'NULL', -1 )" />
+        </mvt:if>
+        <mvt:if expr="l.settings:group:cost">
+            <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_cost, l.settings:group:cost, -1 )" />
+        <mvt:else>
+            <mvt:assign name="l.settings:returnval" value="miva_array_insert( l.settings:products_cost, 'NULL', -1 )" />
+        </mvt:if>
+    </mvt:if>
+</mvt:foreach>
+<mvt:item name="customfields" param="Read_Order( l.settings:order:id, 'sf_payment_method', l.settings:order:payment_type )" />
+<mvt:item name="customfields" param="Read_Order( l.settings:order:id, 'sf_shipping_method', l.settings:order:shipment_carrier )" />
+<mvt:call action="'ABSOLUTE LOCATION OF total_process.php'" method="'POST'" fields="'
+                      l.settings:order:id,
+                      l.settings:order:ship_addr,
+                      l.settings:order:ship_addr1,
+                      l.settings:order:ship_addr2,
+                      l.settings:order:ship_city,
+                      l.settings:order:ship_cntry,
+                      l.settings:order:ship_comp,
+                      l.settings:order:ship_email,
+                      l.settings:order:ship_fax,
+                      l.settings:order:ship_fname,
+                      l.settings:order:ship_lname,
+                      l.settings:order:ship_phone,
+                      l.settings:order:ship_state,
+                      l.settings:order:ship_zip,
+                      l.settings:order:bill_addr,
+                      l.settings:order:bill_addr1,
+                      l.settings:order:bill_addr2,
+                      l.settings:order:bill_city,
+                      l.settings:order:bill_cntry,
+                      l.settings:order:bill_comp,
+                      l.settings:order:bill_email,
+                      l.settings:order:bill_fax,
+                      l.settings:order:bill_fname,
+                      l.settings:order:bill_lname,
+                      l.settings:order:bill_phone,
+                      l.settings:order:bill_state,
+                      l.settings:order:bill_zip,
+                      l.settings:order:payment_type,
+                      l.settings:order:shipment_carrier,
+                      l.settings:products_ids,
+                      l.settings:products_quantities,
+                      l.settings:products_line_prices,
+                      l.settings:products_unit_prices,
+                      l.settings:products_names,
+                      l.settings:products_codes,
+                      l.settings:products_descriptions,
+                      l.settings:products_inv_available,
+                      l.settings:products_inv_instock,
+                      l.settings:product_inv_available,
+                      l.settings:products_cost
+'"></mvt:call>

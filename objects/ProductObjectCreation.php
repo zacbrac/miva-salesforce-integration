@@ -35,7 +35,15 @@ for ($i = 0; $i < $product_codes_count; $i++) {
 
 }
 
-$createResponse = $client->upsert( 'Product_Code__c' , $products, 'Product2');
+try {
+
+	$createResponse = $client->upsert( 'Product_Code__c' , $products, 'Product2');
+
+} catch (Exception $e) {
+
+	reportError('Caught exception: ProductObjectCreation: ' . $e->getMessage() . "\n information that was trying to submit: " . var_export($products, true));
+
+}
 
 foreach ($createResponse as $product) {
 	

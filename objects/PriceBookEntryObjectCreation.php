@@ -38,18 +38,21 @@ for ($i = 0; $i < $product_codes_count; $i++) {
     }
 
     $product['Product_Code__c'] = $product_codes[$i];
-    $product['UnitPrice'] = $product_price[$i];
-
-    if ($i == 0) {
-        file_put_contents('log.txt',$product_line_price[$i]);
-    }
-
+    $product['UnitPrice'] = ( $product_price[$i] != '' ? $product_price[$i] : 0.00);
     $product['IsActive'] = true;
     $products[] = (object) $product;
 
 }
 
-$createResponse = $client->upsert( 'Product_Code__c' , $products, 'PricebookEntry');
+try {
+
+    $createResponse = $client->upsert( 'Product_Code__c' , $products, 'PricebookEntry');
+
+} catch (Exception $e) {
+
+    reportError('Caught exception: PriceBookEntryObjectCreation: ' . $e->getMessage() . "\n information that was trying to submit: " . var_export($products, true));
+
+}
 
 foreach ($createResponse as $product) {
     
