@@ -3,7 +3,7 @@
 // SHIP TO INFO
 $Shipping_Obj['FirstName'] = ( isset($_POST['settings:order:ship_fname']) ? $_POST['settings:order:ship_fname'] : '' );
 $Shipping_Obj['LastName'] = ( isset($_POST['settings:order:ship_lname']) ? $_POST['settings:order:ship_lname'] : '' );
-$Shipping_Obj['Email'] = ( isset($_POST['settings:order:ship_email']) ? preg_replace('/[.](?=.*@)/', '', $_POST['settings:order:ship_email']) : '' );
+$Shipping_Obj['Email'] = ( isset($_POST['settings:order:ship_email']) ? $_POST['settings:order:ship_email'] : '' );
 $Shipping_Obj['Phone'] = ( isset($_POST['settings:order:ship_phone']) ? $_POST['settings:order:ship_phone'] : '' );
 $Shipping_Obj['Fax'] = ( isset($_POST['settings:order:ship_fax']) ? $_POST['settings:order:ship_fax'] : '' );
 $Shipping_Obj['Street'] = ( isset($_POST['settings:order:ship_addr']) ? $_POST['settings:order:ship_addr'] : '' );
@@ -26,7 +26,7 @@ $Shipping_Obj['Company_Id__c'] = hash('sha256', $Shipping_Obj['Company'] .
 // BILL TO INFO
 $Billing_Obj['FirstName'] = (isset($_POST['settings:order:bill_fname']) ? $_POST['settings:order:bill_fname'] : '');
 $Billing_Obj['LastName'] = (isset($_POST['settings:order:bill_lname']) ? $_POST['settings:order:bill_lname'] : '');
-$Billing_Obj['Email'] = (isset($_POST['settings:order:bill_email']) ? preg_replace('/[.](?=.*@)/', '', $_POST['settings:order:bill_email']) : '');
+$Billing_Obj['Email'] = (isset($_POST['settings:order:bill_email']) ? $_POST['settings:order:bill_email'] : '');
 $Billing_Obj['Phone'] = (isset($_POST['settings:order:bill_phone']) ? $_POST['settings:order:bill_phone'] : '');
 $Billing_Obj['Fax'] = (isset($_POST['settings:order:bill_fax']) ? $_POST['settings:order:bill_fax'] : '');
 $Billing_Obj['Street'] = (isset($_POST['settings:order:bill_addr']) ? $_POST['settings:order:bill_addr'] : '');
@@ -87,7 +87,17 @@ if ($logged_in === true) {
 
     } catch (Exception $e) {
 
-        reportError('Caught exception: LeadObjectCreation: Create: ' . $e->getMessage() . "\n information that was trying to submit: " . var_export($Billing_Obj, true));
+        if (preg_match('/SFSSDupeCatcher/',$e->getMessage())) {
+
+            reportError('Caught exception: LeadObjectCreation: Create: Duplicate record: ' . var_export($createResponse, true));
+
+        } else { 
+
+            reportError('Lead Conversion Failed: Caught Fatal Exception: LeadObjectCreation: Create: ' . $e->getMessage() . "\n information that was trying to submit: " . var_export($Billing_Obj, true));
+            
+            die;
+
+        }
 
     }
 
